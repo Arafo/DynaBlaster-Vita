@@ -1,6 +1,6 @@
 using System;
 
-namespace DynBlasterVita
+namespace DynaBlasterVita
 {
 	public class Font
 	{

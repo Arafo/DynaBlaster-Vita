@@ -2,7 +2,7 @@ using System;
 
 using Sce.PlayStation.Core.Graphics;
 
-namespace DynBlasterVita
+namespace DynaBlasterVita
 {
 	public class Score
 	{

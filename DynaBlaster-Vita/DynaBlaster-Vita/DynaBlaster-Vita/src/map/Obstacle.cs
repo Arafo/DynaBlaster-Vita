@@ -3,7 +3,7 @@ using System;
 using Sce.PlayStation.Core.Graphics;
 using Sce.PlayStation.Core.Imaging;
 
-namespace DynBlasterVita
+namespace DynaBlasterVita
 {
 	public class Obstacle : GameObject
 	{

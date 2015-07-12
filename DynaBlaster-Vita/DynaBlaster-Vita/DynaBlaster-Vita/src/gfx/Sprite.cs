@@ -9,7 +9,7 @@ using Sce.PlayStation.Core.Imaging;
 using System.IO;
 using System.Reflection;
 
-namespace DynBlasterVita
+namespace DynaBlasterVita
 {
 	public class Sprite
 	{

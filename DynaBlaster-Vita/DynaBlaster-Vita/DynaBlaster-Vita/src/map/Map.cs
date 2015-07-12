@@ -6,7 +6,7 @@ using Sce.PlayStation.Core.Environment;
 using Sce.PlayStation.Core.Graphics;
 using Sce.PlayStation.Core.Imaging;
 
-namespace DynBlasterVita
+namespace DynaBlasterVita
 {
 	public class Map
 	{

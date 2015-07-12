@@ -2,7 +2,7 @@ using System;
 
 using Sce.PlayStation.Core.Imaging;
 
-namespace DynBlasterVita
+namespace DynaBlasterVita
 {
 	public class Tile
 	{

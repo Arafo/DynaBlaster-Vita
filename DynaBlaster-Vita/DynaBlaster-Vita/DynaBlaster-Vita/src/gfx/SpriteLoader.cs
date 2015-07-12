@@ -3,7 +3,7 @@ using System.IO;
 
 using Sce.PlayStation.Core.Imaging;
 
-namespace DynBlasterVita
+namespace DynaBlasterVita
 {
 	public class SpriteLoader
 	{
