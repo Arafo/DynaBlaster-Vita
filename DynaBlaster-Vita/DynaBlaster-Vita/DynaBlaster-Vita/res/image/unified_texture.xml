@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root version="1.0">
+  <info w="337" h="66" />
+  <textures>
+    <texture filename="image/map2.png" x="0" y="0" w="336" h="32" />
+    <texture filename="image/map1.png" x="0" y="33" w="336" h="32" />
+  </textures>
+</root>
