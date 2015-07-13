@@ -72,6 +72,8 @@ namespace DynaBlasterVita
 			else down.toggle(false);
 			if((gamePadData.Buttons & GamePadButtons.Cross) != 0) fire.toggle(true);
 			else fire.toggle(false);
+			if((gamePadData.Buttons & GamePadButtons.Circle) != 0) exit.toggle(true);
+			else exit.toggle(false);
 		}
 	}
 }

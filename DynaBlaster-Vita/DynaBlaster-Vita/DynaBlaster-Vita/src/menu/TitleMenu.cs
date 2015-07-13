@@ -76,6 +76,7 @@ namespace DynaBlasterVita
 					if (selected == 0) {
 						//MP3Player.title.stop();
 						//game.startLevel(1, 1);
+						AppMain.setMenu(null);
 					}
 					if (selected == 1) {
 						//MP3Player.title.stop();
@@ -85,11 +86,8 @@ namespace DynaBlasterVita
 						//game.setMenu(new SetupMenu(this));
 					}
 					if (selected == 3) {
-
-						AppMain.setMenu(null);
+						AppMain.setMenu(new PasswordMenu(this, graphics, scale));
 					}
-
-						//game.setMenu(new PasswordMenu(this));
 				}
 	
 			}
