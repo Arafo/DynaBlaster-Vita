@@ -25,15 +25,17 @@ namespace DynaBlasterVita
 		private int mapHeight;
 		private Sprite finalMap;
 		private GraphicsContext graphics;
+		private int scale;
 	
 		private SpriteSheet tileset;
 		private Tile[,] tiles;
 	
-		public Map(String s, int tileSize, GraphicsContext graphics) {
+		public Map(String s, int tileSize, int scale, GraphicsContext graphics) {
 			if (s != null) {
 				this.mapPath = path1 + s + path2;
 				this.tileSize = tileSize;
 				this.graphics = graphics;
+				this.scale = scale;
 	
 				try {
 					
@@ -182,8 +184,7 @@ namespace DynaBlasterVita
 		}
 		
 		public int getScale() {
-			//return Main.ESCALA;
-			return 2;
+			return scale;
 		}
 	
 		public bool isBlocked(int row, int col) {
