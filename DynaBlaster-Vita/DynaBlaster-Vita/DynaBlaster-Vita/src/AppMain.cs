@@ -12,7 +12,8 @@ namespace DynaBlasterVita
 {
 	public class AppMain
 	{
-		private static int scale = 2;
+		public static int scale = 2;
+		public static bool debug = true;
 		private static GraphicsContext graphics;
 		private static Map map;
 		private static GenerateObstacles obstacles;
@@ -53,6 +54,8 @@ namespace DynaBlasterVita
 			clock.Start();
 			
 			setMenu(new TitleMenu(graphics, scale));
+			//setMenu(new LevelMenu(1, graphics, scale));
+			//setMenu(new GameOverMenu(1, 1, 1, graphics, scale));
 			input = new InputHandler();
 		}
 
@@ -67,7 +70,7 @@ namespace DynaBlasterVita
 				menu.tick(input);
 			} 
 			else {
-				
+				if (input.exit.clicked) setMenu(new TitleMenu(graphics, scale));
 			}	
 			hud.UpdateFPS(timeDelta);
 			hud.UpdatePosition(timeDelta + "ms");
@@ -77,7 +80,7 @@ namespace DynaBlasterVita
 		{
 			// Clear the screen
 			graphics.SetClearColor (0.0f, 0.0f, 0.0f, 0.0f);
-			graphics.SetClearColor(73, 102, 192, 255);
+			//graphics.SetClearColor(73, 102, 192, 255);
 			graphics.Clear ();
 			
 			if (menu != null) {
@@ -88,7 +91,7 @@ namespace DynaBlasterVita
 				obstacles.Render();
 			}
 			
-			hud.Render();
+			if (debug) hud.Render();
 			
 			// Present the screen
 			graphics.SwapBuffers ();

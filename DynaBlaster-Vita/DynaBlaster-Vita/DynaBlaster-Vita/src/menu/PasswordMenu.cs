@@ -51,9 +51,8 @@ namespace DynaBlasterVita
 			{
 				for(int i=0; i<8;i++) {
 					for(int j=0; j<8; j++) {
-						sr.Read();
-						sr.Read();
-						passwords[i, j] = Convert.ToString(sr.Read());
+						string line = Convert.ToString(sr.ReadLine());
+						passwords[i, j] = line.Substring(line.Length - 8);
 					}			
 				}
 			}

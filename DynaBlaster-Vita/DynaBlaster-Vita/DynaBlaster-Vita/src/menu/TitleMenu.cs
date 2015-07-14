@@ -24,6 +24,7 @@ namespace DynaBlasterVita
 		private static String copyright = "COPYRIGHT 2015.2015";
 		private static String company = "VidejuegosG5 SA";
 		private static SpriteLoader sl;
+		private MP3Player sound;
 	
 		public TitleMenu(GraphicsContext g, int scale) : base(g, scale) {
 			font1 = new Font(new Vector4(255, 255, 255, 255), true, scale, g);
@@ -46,7 +47,8 @@ namespace DynaBlasterVita
 			sl.setImage(sl.getImage().Resize(new ImageSize(sl.getImage().Size.Width*scale, sl.getImage().Size.Height*scale)));
 			bl = sl.ImageToSprite(g);				
 			
-			//MP3Player.title.play();
+			this.sound = new MP3Player("/Application/res/sound/title.mp3");
+			sound.play();
 	
 		}
 	
@@ -74,16 +76,18 @@ namespace DynaBlasterVita
 				if (input.fire.clicked) {
 
 					if (selected == 0) {
+						sound.close();
 						//MP3Player.title.stop();
 						//game.startLevel(1, 1);
-						AppMain.setMenu(null);
+						AppMain.setMenu(new LevelMenu(1, graphics, scale));
 					}
 					if (selected == 1) {
+						sound.close();
 						//MP3Player.title.stop();
-						//game.setMenu(new CreditsMenu());
+						AppMain.setMenu(new CreditsMenu(graphics, scale));
 					}
 					if (selected == 2) {
-						//game.setMenu(new SetupMenu(this));
+						AppMain.setMenu(new SetupMenu(this, graphics, scale));
 					}
 					if (selected == 3) {
 						AppMain.setMenu(new PasswordMenu(this, graphics, scale));
