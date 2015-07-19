@@ -20,19 +20,22 @@ namespace DynaBlasterVita
 		private Stopwatch clock;
 		private MP3Player sound;
 
-		public LevelMenu (int level, GraphicsContext g, int scale) : base(g, scale) {
+		public LevelMenu (int level, GraphicsContext g, Vector2 scales) : base(g, scales, new Vector4(0, 0, 0, 0)) {
 			this.lev = level;
 			
 			this.sl = new SpriteLoader();			
 			this.sl.cargarImagen(sprites);
-			this.sl.setImage(sl.getImage().Resize(new ImageSize(sl.getImage().Size.Width*scale, sl.getImage().Size.Height*scale)));
+			this.sl.setImage(sl.getImage().Resize(new ImageSize((int)(sl.getImage().Size.Width*scales.X), 
+			                                                    (int)(sl.getImage().Size.Height*scales.Y))));
 			this.ss = new SpriteSheet(this.sl.getImage());
 			
-			this.bg = ss.obtenerSprite(0, 0, 256*scale, 160*scale, g);
-			this.round = ss.obtenerSprite(76*scale, 161*scale, 49*scale, 14*scale, g);
-			this.level = ss.obtenerSprite(12*(level-1)*scale + 134*scale, 160*scale, 12*scale, 14*scale, g);
+			this.bg = ss.obtenerSprite(0, 0, (int)(256*scales.X), (int)(160*scales.Y), g);
+			this.round = ss.obtenerSprite((int)(76*scales.X), (int)(161*scales.Y), (int)(49*scales.X), (int)(14*scales.Y), g);
+			this.level = ss.obtenerSprite((int)(12*(level-1)*scales.X + 134*scales.X), (int)(160*scales.Y), 
+			                              (int)(12*scales.X), (int)(14*scales.Y), g);
 			
 			// TODO Arreglar parpadeo de ronda y nivel
+			int scale = 2;
 			Sprite levelaux = ss.obtenerSprite(12*(level-1)*scale + 134*scale, 160*scale, 12*scale, 14*scale, g);
 			levelaux.SetColor(new Vector4(0, 0, 0, 255));
 			Sprite roundaux = ss.obtenerSprite(76*scale, 161*scale, 49*scale, 14*scale, g);
@@ -40,9 +43,9 @@ namespace DynaBlasterVita
 			
 			Sprite[] roundFlicker = {this.round, roundaux};
 			Sprite[] levelFlicker = {this.level, levelaux};
-			Sprite[] head = {ss.obtenerSprite(1, 160*scale, 23*scale, 23*scale, g), 
-					ss.obtenerSprite(23*scale, 160*scale, 24*scale, 23*scale, g), 
-					ss.obtenerSprite(48*scale, 160*scale, 24*scale, 23*scale, g)};
+			Sprite[] head = {ss.obtenerSprite(1, (int)(160*scales.Y), (int)(23*scales.X), (int)(23*scales.Y), g), 
+					ss.obtenerSprite((int)(23*scales.X), (int)(160*scales.Y), (int)(24*scales.X), (int)(23*scales.Y), g), 
+					ss.obtenerSprite((int)(48*scales.X), (int)(160*scales.Y), (int)(24*scales.X), (int)(23*scales.Y), g)};
 			
 			this.head = new Animation(head, 12);
 			this.roundFlicker = new Animation(roundFlicker, 5);
@@ -50,36 +53,36 @@ namespace DynaBlasterVita
 			
 			switch (level) {
 			case 1:
-				this.x = graphics.Screen.Width/2 - this.bg.Width/2 + 18*scale;
-				this.y = 134*scale;
+				this.x = (int)(graphics.Screen.Width/2 - this.bg.Width/2 + 18*scales.X);
+				this.y = (int)(134*scales.Y);
 				break;
 			case 2:
-				this.x = graphics.Screen.Width/2 - this.bg.Width/2 + 48*scale;
-				this.y = 112*scale;
+				this.x = (int)(graphics.Screen.Width/2 - this.bg.Width/2 + 48*scales.X);
+				this.y = (int)(112*scales.Y);
 				break;
 			case 3:
-				this.x = graphics.Screen.Width/2 - this.bg.Width/2 + 66*scale;
-				this.y = 168*scale;
+				this.x = (int)(graphics.Screen.Width/2 - this.bg.Width/2 + 66*scales.X);
+				this.y = (int)(168*scales.Y);
 				break;
 			case 4:
-				this.x = graphics.Screen.Width/2 - this.bg.Width/2 + 104*scale;
-				this.y = 128*scale;
+				this.x = (int)(graphics.Screen.Width/2 - this.bg.Width/2 + 104*scales.X);
+				this.y = (int)(128*scales.Y);
 				break;
 			case 5:
-				this.x = graphics.Screen.Width/2 - this.bg.Width/2 + 154*scale;
-				this.y = 120*scale;
+				this.x = (int)(graphics.Screen.Width/2 - this.bg.Width/2 + 154*scales.X);
+				this.y = (int)(120*scales.Y);
 				break;
 			case 6:
-				this.x = graphics.Screen.Width/2 - this.bg.Width/2 + 210*scale;
-				this.y = 138*scale;
+				this.x = (int)(graphics.Screen.Width/2 - this.bg.Width/2 + 210*scales.X);
+				this.y = (int)(138*scales.Y);
 				break;
 			case 7:
-				this.x = graphics.Screen.Width/2 - this.bg.Width/2 + 210*scale;
-				this.y = 104*scale;
+				this.x = (int)(graphics.Screen.Width/2 - this.bg.Width/2 + 210*scales.X);
+				this.y = (int)(104*scales.Y);
 				break;
 			case 8:
-				this.x = graphics.Screen.Width/2 - this.bg.Width/2 + 210*scale;
-				this.y = 62*scale;
+				this.x = (int)(graphics.Screen.Width/2 - this.bg.Width/2 + 210*scales.X);
+				this.y = (int)(62*scales.Y);
 				break;
 			}
 			this.head.start();
@@ -103,7 +106,7 @@ namespace DynaBlasterVita
 				this.sound.close();
 				//MP3Player.level_start.stop();
 				//game.setMenu(new MapMenu(lev, 1));
-				AppMain.setMenu(new MapMenu(lev, 1, graphics, scale));
+				AppMain.setMenu(new MapMenu(lev, 1, graphics, scales));
 			}
 			head.tick();
 			roundFlicker.tick();
@@ -116,7 +119,7 @@ namespace DynaBlasterVita
 			this.bg.Position.Y = graphics.Screen.Height/2 - this.bg.Height/2;
 			this.bg.Render();
 			
-			this.roundFlicker.getSprite().Position.X =  graphics.Screen.Width/2 - round.Width/2 - 12*scale;
+			this.roundFlicker.getSprite().Position.X =  (int)(graphics.Screen.Width/2 - round.Width/2 - 12*scales.X);
 		    this.roundFlicker.getSprite().Position.Y = graphics.Screen.Height - round.Height*2;
 			this.roundFlicker.getSprite().Render();
 			

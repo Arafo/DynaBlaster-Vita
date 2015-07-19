@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 
 using Sce.PlayStation.Core.Input;
+using Sce.PlayStation.HighLevel.GameEngine2D.Base;
 
 namespace DynaBlasterVita
 {
@@ -22,15 +23,20 @@ namespace DynaBlasterVita
 				if (pressed) {
 					presses++;
 				}
+				else {
+					presses = 0;
+				}
 			}
 	
 			public void tick() {
+
 				if (absorbs < presses) {
 					absorbs++;
-					presses = absorbs - 24;
+					presses = absorbs - 64;
 					clicked = true;
 				} else {
 					clicked = false;
+					absorbs = 0;
 				}
 			}
 		}
@@ -74,6 +80,8 @@ namespace DynaBlasterVita
 			else fire.toggle(false);
 			if((gamePadData.Buttons & GamePadButtons.Circle) != 0) exit.toggle(true);
 			else exit.toggle(false);
+			if((gamePadData.Buttons & GamePadButtons.Start) != 0) pause.toggle(true);
+			else pause.toggle(false);
 		}
 	}
 }

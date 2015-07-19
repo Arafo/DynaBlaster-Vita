@@ -20,7 +20,8 @@ namespace DynaBlasterVita
 		private int currentY;
 		private int offsetX = 2;
 		private int offsetY = 1;
-		private int tileSize = 16;
+		private int tileSizeX = 16;
+		private int tileSizeY = 16;
 		private bool canPlace = false;
 		private GraphicsContext g;
 		
@@ -29,10 +30,12 @@ namespace DynaBlasterVita
 		public GenerateObstacles(Map map, bool solidObstacles, GraphicsContext g) {
 			int finX = map.getmapWidth();
 			int finY = map.getmapHeight();
-			this.tileSize *= map.getScale();
+			this.tileSizeX = (int)(this.tileSizeX*map.getScale().X);
+			this.tileSizeY = (int)(this.tileSizeY*map.getScale().Y);
 			this.g = g;
 			
-			this.singleObstacle = new Obstacle(0, 0, tileSize, null, map.getSpriteSheet(), map.getScale(), true, g);
+			this.singleObstacle = new Obstacle(0, 0, new Vector2(tileSizeX, tileSizeY), map.getMapSize(), null, map.getSpriteSheet(), 
+			                                   map.getScale(), true, g);
 			
 			if (finY > finX) finY--;
 			
@@ -64,13 +67,21 @@ namespace DynaBlasterVita
 					}
 	
 					if (canPlace) {
-						obstacles.Add(new Obstacle(singleObstacle, 
-						                           currentX*tileSize + offsetX*tileSize, 
-						                           currentY*tileSize + offsetY*tileSize,
-						                           true,
-						                           tileSize,
-						                           map.getScale()));
-
+//						obstacles.Add(new Obstacle(singleObstacle, 
+//						                           currentX*tileSize + offsetX*tileSize, 
+//						                           currentY*tileSize + offsetY*tileSize,
+//						                           true,
+//						                           tileSize,
+//						                           map.getScale()));
+						
+						obstacles.Add(new Obstacle(currentX*tileSizeX + offsetX*tileSizeX, 
+						                           currentY*tileSizeY + offsetY*tileSizeY, 
+						                           new Vector2(tileSizeX, tileSizeY),
+						                           map.getMapSize(),
+						                           null, 
+						                           map.getSpriteSheet(), 
+						                           map.getScale(),
+						                           true, g));
 						canPlace = false;
 					}
 				}
@@ -87,52 +98,62 @@ namespace DynaBlasterVita
 				// Obstaculos fijos
 				if (currentY%2 != 0 && currentX%2 != 0) {
 					obstacles.Add(new Obstacle(singleObstacle, 
-					                           currentX*tileSize + offsetX*tileSize, 
-					                           currentY*tileSize + offsetY*tileSize,
+					                           currentX*tileSizeX + offsetX*tileSizeX, 
+					                           currentY*tileSizeY + offsetY*tileSizeY,
 						                       false,
-						                       tileSize,
-						                       map.getScale()));					
+						                       new Vector2(tileSizeX, tileSizeY),
+						                       map.getScale(),
+					                           map.getMapSize(),
+					                           g));					
 				}
 				
 				// Paredes laterales
 				// Pared izquierda
 				if (currentX == 1) {
 					obstacles.Add(new Obstacle(singleObstacle, 
-					                           currentX*tileSize, 
-					                           currentY*tileSize + offsetY*tileSize,
+					                           currentX*tileSizeX, 
+					                           currentY*tileSizeY + offsetY*tileSizeY,
 						                       false,
-						                       tileSize,
-						                       map.getScale()));					
+						                       new Vector2(tileSizeX, tileSizeY),
+						                       map.getScale(),
+					                           map.getMapSize(),
+					                           g));					
 				}
 				
 				// Pared Derecha
 				if (currentX == ((finX - offsetX*2) - 1)) {
 					obstacles.Add(new Obstacle(singleObstacle, 
-					                           currentX*tileSize + (offsetX+1)*tileSize, 
-					                           currentY*tileSize + offsetY*tileSize,
+					                           currentX*tileSizeX + (offsetX+1)*tileSizeX, 
+					                           currentY*tileSizeY + offsetY*tileSizeY,
 						                       false,
-						                       tileSize,
-						                       map.getScale()));
+						                       new Vector2(tileSizeX, tileSizeY),
+						                       map.getScale(),
+					                           map.getMapSize(),
+					                           g));
 				}
 				
 				// Pared superior
 				if (currentY == 0) {
 					obstacles.Add(new Obstacle(singleObstacle, 
-					                           currentX*tileSize + offsetX*tileSize, 
-					                           currentY*tileSize,
+					                           currentX*tileSizeX + offsetX*tileSizeX, 
+					                           currentY*tileSizeY,
 						                       false,
-						                       tileSize,
-						                       map.getScale()));					
+						                       new Vector2(tileSizeX, tileSizeY),
+						                       map.getScale(),
+					                           map.getMapSize(),
+					                           g));					
 				}
 				
 				// Pared inferior
 				if (currentY == (finY - offsetY*2) - 1) {
 					obstacles.Add(new Obstacle(singleObstacle, 
-					                           currentX*tileSize + offsetX*tileSize, 
-					                           currentY*tileSize + (offsetY+1)*tileSize,
+					                           currentX*tileSizeX + offsetX*tileSizeX, 
+					                           currentY*tileSizeY + (offsetY+1)*tileSizeY,
 						                       false,
-						                       tileSize,
-						                       map.getScale()));					
+						                       new Vector2(tileSizeX, tileSizeY),
+						                       map.getScale(),
+					                           map.getMapSize(),
+					                           g));					
 				}	
 	
 				currentX++;
@@ -153,13 +174,13 @@ namespace DynaBlasterVita
 			return path;
 		}
 		
-		public bool obstacleAt(int x, int y, int scale) {
-//			x = x*tileSize + offsetX*tileSize - 8*scale;
-//			y = y*tileSize + offsetY*tileSize + 24*scale;
-//			foreach (Obstacle obs in obstacles) {
-//				if (new Rectangle(x, y, tileSize, tileSize).IntersectsWith(obs.position))
-//					return true;
-//			}
+		public bool obstacleAt(int x, int y, Vector2 scale) {
+			x = x*tileSizeX + offsetX*tileSizeX;// - 8*scale;
+			y = (int)(y*tileSizeY + offsetY*tileSizeY + 24*scale.Y);
+			foreach (Obstacle obs in obstacles) {
+				if (new Rectangle(x, y, tileSizeX, tileSizeY).intersects(obs.position))
+					return true;
+			}
 			return false;
 		}
 		
@@ -171,8 +192,8 @@ namespace DynaBlasterVita
 			return offsetY;
 		}
 		
-		public int getTileSize() {
-			return tileSize;
+		public Vector2 getTileSize() {
+			return new Vector2(tileSizeX, tileSizeY);
 		}
 	}
 }

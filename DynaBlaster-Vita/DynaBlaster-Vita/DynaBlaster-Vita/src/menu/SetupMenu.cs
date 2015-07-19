@@ -17,6 +17,7 @@ namespace DynaBlasterVita
 	    private int selectedDebug = 0;
 		private Font font1, font2;
 		private Sprite cu, bg, dy, bl;
+		private Sprite backgroundColor;
 	
 		private static String cursor = "/Application/res/image/flecharoja.png";
 		private static String background = "/Application/res/image/bg1.png";
@@ -24,35 +25,38 @@ namespace DynaBlasterVita
 		private static String blaster = "/Application/res/image/blaster.png";
 		private static String[] options = { "Sound", "Zoom", "Cheats", "Debug Info", "Exit" };
 		private static String[] onoff = { "On", "Off" };
-		private static String[] zoom = { "x1", "x2", "Streched" };
+		private static String[] offon = { "Off", "On" };
+		private static String[] zoom = { "Original", "Streched" };
 		private static String push = "Push fire button !";
 		private static String copyright = "COPYRIGHT 2015.2015";
 		private static String company = "VidejuegosG5 SA";
 		private static SpriteLoader sl;
 		private Menu menu;
 	
-		public SetupMenu(Menu menu, GraphicsContext g, int scale) : base(g, scale) {
+		public SetupMenu(Menu menu, GraphicsContext g, Vector2 scales) : base(g, scales, new Vector4(73, 102, 192, 255)) {
 			this.menu = menu;
 			
-			font1 = new Font(new Vector4(255, 255, 255, 255), true, scale, g);
-			font2 = new Font(new Vector4(255, 255, 0, 255), true, scale, g);
+			font1 = new Font(new Vector4(255, 255, 255, 255), true, scales, g);
+			font2 = new Font(new Vector4(255, 255, 0, 255), true, scales, g);
 			
 			sl = new SpriteLoader();
 			sl.cargarImagen(cursor);
-			sl.setImage(sl.getImage().Resize(new ImageSize(sl.getImage().Size.Width*scale, sl.getImage().Size.Height*scale)));
+			sl.setImage(sl.getImage().Resize(new ImageSize((int)(sl.getImage().Size.Width*scales.X), (int)(sl.getImage().Size.Height*scales.Y))));
 			cu = sl.ImageToSprite(g);		
 			
 			sl.cargarImagen(background);
-			sl.setImage(sl.getImage().Resize(new ImageSize(sl.getImage().Size.Width*scale, sl.getImage().Size.Height*scale)));
+			sl.setImage(sl.getImage().Resize(new ImageSize((int)(sl.getImage().Size.Width*scales.X), (int)(sl.getImage().Size.Height*scales.Y))));
 			bg = sl.ImageToSprite(g);
 			
 			sl.cargarImagen(dyna);
-			sl.setImage(sl.getImage().Resize(new ImageSize(sl.getImage().Size.Width*scale, sl.getImage().Size.Height*scale)));
+			sl.setImage(sl.getImage().Resize(new ImageSize((int)(sl.getImage().Size.Width*scales.X), (int)(sl.getImage().Size.Height*scales.Y))));
 			dy = sl.ImageToSprite(g);
 				
 			sl.cargarImagen(blaster);
-			sl.setImage(sl.getImage().Resize(new ImageSize(sl.getImage().Size.Width*scale, sl.getImage().Size.Height*scale)));
-			bl = sl.ImageToSprite(g);				
+			sl.setImage(sl.getImage().Resize(new ImageSize((int)(sl.getImage().Size.Width*scales.X), (int)(sl.getImage().Size.Height*scales.Y))));
+			bl = sl.ImageToSprite(g);	
+			
+			backgroundColor = Textures.CreateTexture(g.Screen.Width, g.Screen.Height, g, bgColor);
 			
 			//MP3Player.title.play();
 	
@@ -88,7 +92,7 @@ namespace DynaBlasterVita
 			if (selected == 2) {
 				if (input.left.clicked) selectedCheats--;
 				if (input.right.clicked) selectedCheats++;
-				int lenCheats = onoff.Length;
+				int lenCheats = offon.Length;
 				if (selectedCheats < 0) selectedCheats += lenCheats;
 				if (selectedCheats >= lenCheats) selectedCheats -= lenCheats;
 			}
@@ -106,11 +110,21 @@ namespace DynaBlasterVita
 				if (selected == 0) {
 				}
 				if (selected == 1) {
-					if (selectedZoom == 0) AppMain.scale = 2;
-					if (selectedZoom == 1) AppMain.scale = 3;
-					AppMain.setMenu(new SetupMenu(menu, graphics, AppMain.scale));
+					if (selectedZoom == 0) {
+						AppMain.scales.X = 2.0f; 
+						AppMain.scales.Y = 2.0f;
+					}
+					if (selectedZoom == 1) {
+						AppMain.scales.X = (float)graphics.Screen.Width/256;  
+						AppMain.scales.Y = (float)graphics.Screen.Height/232;
+					}
+					menu.Resize(AppMain.scales);
+					AppMain.ResizeGui();
+					AppMain.setMenu(new SetupMenu(menu, graphics, AppMain.scales));
 				}
 				if (selected == 2) {
+					if (offon[selectedCheats].Equals("On")) AppMain.cheats = true;
+					else AppMain.cheats = false;
 				}
 				if (selected == 3) {
 					if (onoff[selectedDebug].Equals("On")) AppMain.debug = true;
@@ -122,67 +136,69 @@ namespace DynaBlasterVita
 	
 		public override void Render() {			
 			// Color de fondo
-			graphics.SetClearColor(bgColor);
+			backgroundColor.Position.X = 0;
+			backgroundColor.Position.Y = 0;
+			backgroundColor.Render();
 			
 			// Fondo
 			bg.Position.X = graphics.Screen.Width / 2 - bg.Width / 2;
-			bg.Position.Y = graphics.Screen.Height - 185*scale;
+			bg.Position.Y = graphics.Screen.Height - bg.Height - 2;
 			bg.Render();
 			
 			// Dyna
-			dy.Position.X = graphics.Screen.Width / 2 - bg.Width /2 + 25 * scale;
-			dy.Position.Y = 15 * scale;
+			dy.Position.X = graphics.Screen.Width / 2 - bg.Width /2 + 25 * scales.X;
+			dy.Position.Y = 15 * scales.Y;
 			dy.Render();
 			
 			// Blaster
-			bl.Position.X = graphics.Screen.Width / 2 - bg.Width /2 + 80 * scale;
-			bl.Position.Y = 45 * scale;
+			bl.Position.X = graphics.Screen.Width / 2 - bg.Width /2 + 80 * scales.X;
+			bl.Position.Y = 45 * scales.Y;
 			bl.Render();
 	
 			for (int i = 0; i < options.Length; i++) {
 				String msg = options[i]; 
 				if (i == selected) {
-					cu.Position.X = graphics.Screen.Width/2 - ((options[3].ToString().Length/2)*font1.getTilesize()*scale*3/2 + cu.Width + 5);
-					cu.Position.Y = graphics.Screen.Height/2 + (font1.getTilesize()*i)*3/2*scale + font1.getTilesize()*scale*33/10;
+					cu.Position.X = graphics.Screen.Width/2 - ((options[3].ToString().Length/2)*font1.getTilesize()*scales.X*3/2 + cu.Width + 5);
+					cu.Position.Y = graphics.Screen.Height/2 + (font1.getTilesize()*i)*3/2*scales.Y + font1.getTilesize()*scales.Y*33/10;
 					cu.Render();
 					font1.render(msg,
-							graphics.Screen.Width/2 - (options[3].ToString().Length/2) * font1.getTilesize()* scale*3/2, 
-							graphics.Screen.Height/2 + (font1.getTilesize()*i)*3/2*scale + font1.getTilesize()*scale*33/10);
+							(int)(graphics.Screen.Width/2 - (options[3].ToString().Length/2) * font1.getTilesize()* scales.X*3/2), 
+							(int)(graphics.Screen.Height/2 + (font1.getTilesize()*i)*3/2*scales.Y + font1.getTilesize()*scales.Y*33/10));
 				} else {
 					font1.render(msg, 
-							graphics.Screen.Width/2 - (options[3].ToString().Length/2)*font1.getTilesize()*scale*3/2, 
-							graphics.Screen.Height/2 + (font1.getTilesize()*i)*3/2*scale + font1.getTilesize()*scale*33/10);
+							(int)(graphics.Screen.Width/2 - (options[3].ToString().Length/2)*font1.getTilesize()*scales.X*3/2), 
+							(int)(graphics.Screen.Height/2 + (font1.getTilesize()*i)*3/2*scales.Y + font1.getTilesize()*scales.Y*33/10));
 				}
 			}
 			// Sound
 			font1.render("<" + onoff[selectedSound] + ">", 
-				graphics.Screen.Width/2 + 26*scale, 
-				graphics.Screen.Height/2 + font1.getTilesize()*scale*33/10);
+				(int)(graphics.Screen.Width/2 + 26*scales.X), 
+				(int)(graphics.Screen.Height/2 + font1.getTilesize()*scales.Y*33/10));
 			
 			// Zoom 
 			font1.render("<" + zoom[selectedZoom] + ">", 
-				graphics.Screen.Width/2 + 26*scale, 
-				graphics.Screen.Height/2 + font1.getTilesize()*3/2*scale + font1.getTilesize()*scale*33/10);
+				(int)(graphics.Screen.Width/2 + 26*scales.X), 
+				(int)(graphics.Screen.Height/2 + font1.getTilesize()*3/2*scales.Y + font1.getTilesize()*scales.Y*33/10));
 			
 			// Cheats
-			font1.render("<" + onoff[selectedCheats] + ">", 
-				graphics.Screen.Width/2 + 26*scale, 
-				graphics.Screen.Height/2 + font1.getTilesize()*3*scale + font1.getTilesize()*scale*33/10);
+			font1.render("<" + offon[selectedCheats] + ">", 
+				(int)(graphics.Screen.Width/2 + 26*scales.X), 
+				(int)(graphics.Screen.Height/2 + font1.getTilesize()*3*scales.Y + font1.getTilesize()*scales.Y*33/10));
 			
 			// Debug info
 			font1.render("<" + onoff[selectedDebug] + ">", 
-				graphics.Screen.Width/2 + 26*scale, 
-				graphics.Screen.Height/2 + font1.getTilesize()*9/2*scale + font1.getTilesize()*scale*33/10);
+				(int)(graphics.Screen.Width/2 + 26*scales.X), 
+				(int)(graphics.Screen.Height/2 + font1.getTilesize()*9/2*scales.Y + font1.getTilesize()*scales.Y*33/10));
 			
 			font2.render(push, 
-					graphics.Screen.Width / 2 - (push.Length / 2) * font1.getTilesize() * scale, 
-					graphics.Screen.Height / 2 - font2.getTilesize() * scale);
+					(int)(graphics.Screen.Width / 2 - (push.Length / 2) * font1.getTilesize() * scales.X), 
+					(int)(graphics.Screen.Height / 2 - font2.getTilesize() * scales.Y));
 			font2.render(copyright, 
-					graphics.Screen.Width / 2 - (copyright.Length / 2) * font1.getTilesize() * scale,
-					graphics.Screen.Height - font2.getTilesize() * 7/2 * scale);
+					(int)(graphics.Screen.Width / 2 - (copyright.Length / 2) * font1.getTilesize() * scales.X),
+					(int)(graphics.Screen.Height - font2.getTilesize() * 7/2 * scales.Y));
 			font2.render(company, 
-					graphics.Screen.Width / 2 - (company.Length / 2) * font1.getTilesize() * scale,
-					graphics.Screen.Height - font2.getTilesize() * 2 * scale);
+					(int)(graphics.Screen.Width / 2 - (company.Length / 2) * font1.getTilesize() * scales.X),
+					(int)(graphics.Screen.Height - font2.getTilesize() * 2 * scales.Y));
 		}
 	}
 }

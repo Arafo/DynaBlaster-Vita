@@ -25,12 +25,12 @@ namespace DynaBlasterVita
 		private int mapHeight;
 		private Sprite finalMap;
 		private GraphicsContext graphics;
-		private int scale;
+		private Vector2 scale;
 	
 		private SpriteSheet tileset;
 		private Tile[,] tiles;
 	
-		public Map(String s, int tileSize, int scale, GraphicsContext graphics) {
+		public Map(String s, int tileSize, Vector2 scale, GraphicsContext graphics) {
 			if (s != null) {
 				this.mapPath = path1 + s + path2;
 				this.tileSize = tileSize;
@@ -94,7 +94,7 @@ namespace DynaBlasterVita
 			Image spriteSheet = loader.cargarImagen(map);
 			SpriteSheet ss = new SpriteSheet(spriteSheet);
 			loadTiles(ss);
-			saveImagetoFile(getScale());
+			saveImagetoFile(scale);
 		}
 	
 		public void loadTiles(SpriteSheet s) {
@@ -120,7 +120,7 @@ namespace DynaBlasterVita
 	
 		}
 	
-		public void saveImagetoFile(int scale) {
+		public void saveImagetoFile(Vector2 scale) {
 			
 			int width = this.mapWidth*this.tileSize;
 	        int height = this.mapHeight*this.tileSize;
@@ -146,12 +146,12 @@ namespace DynaBlasterVita
 	
 				}
 			}
-			Image aux = newImage.Resize(new ImageSize(width*scale, height*scale));
+			Image aux = newImage.Resize(new ImageSize((int)(width*scale.X), (int)(height*scale.Y)));
 			Texture2D texture = new Texture2D(aux.Size.Width, aux.Size.Height, false, PixelFormat.Rgba);
 			texture.SetPixels(0, aux.ToBuffer(), PixelFormat.Rgba);
 			this.finalMap = new Sprite(graphics, texture);
-			this.finalMap.Position.X = -8*getScale();
-			this.finalMap.Position.Y = 24*getScale();
+			//this.finalMap.Position.X = -8*getScale();
+			//this.finalMap.Position.Y = 24*getScale();
 		}
 	
 		public int getx() {
@@ -179,11 +179,15 @@ namespace DynaBlasterVita
 			return tileSize;
 		}
 		
+		public Vector2 getMapSize() {
+			return new Vector2(finalMap.Width, finalMap.Height);
+		}
+		
 		public SpriteSheet getSpriteSheet() {
 			return tileset;
 		}
 		
-		public int getScale() {
+		public Vector2 getScale() {
 			return scale;
 		}
 	
@@ -222,8 +226,9 @@ namespace DynaBlasterVita
 		}
 		
 		public void renderMap() {
+			this.finalMap.Position.X = graphics.Screen.Width/2 - finalMap.Width/2;
+			this.finalMap.Position.Y = 24*scale.Y;
 			this.finalMap.Render();
 		}
 	}
 }
-

@@ -9,19 +9,22 @@ namespace DynaBlasterVita
 	public class Menu
 	{
 		protected GraphicsContext graphics;
-		protected int scale;
+		protected Vector2 scales;
 		protected Vector4 bgColor;
 		
-		public Menu(GraphicsContext g, int scale) {
+		public Menu(GraphicsContext g, Vector2 scales, Vector4 color) {
 			this.graphics = g;
-			this.scale = scale;
-			this.bgColor = new Vector4(73, 102, 192, 255);
+			this.scales = scales;
+			this.bgColor = color;
 		}
 		
 		public virtual void tick(InputHandler input) {
 		}
 		
 		public virtual void Render() {
+		}
+		
+		public virtual void Resize(Vector2 scale) {
 		}
 		
 	}

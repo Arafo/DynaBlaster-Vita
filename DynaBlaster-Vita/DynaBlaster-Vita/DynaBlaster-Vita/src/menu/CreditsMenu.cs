@@ -27,8 +27,8 @@ namespace DynaBlasterVita
 				"", "", "", "", "", "", "THE END"};
 		private float y;
 	
-		public CreditsMenu(GraphicsContext g, int scale) : base(g, scale) {
-			this.font = new Font(new Vector4(255, 255, 255, 255), true, scale, g);
+		public CreditsMenu(GraphicsContext g, Vector2 scales) : base(g, scales, new Vector4(0, 0, 0, 255)) {
+			this.font = new Font(new Vector4(255, 255, 255, 255), true, scales, g);
 			this.y = 0;
 			music = new MP3Player("/Application/res/sound/credits.mp3");
 			music.play();
@@ -37,10 +37,10 @@ namespace DynaBlasterVita
 		public override void tick(InputHandler input) {
 			if (input.exit.clicked || (music != null && !music.isPlaying())) {
 				music.close();
-				AppMain.setMenu(new TitleMenu(graphics, scale));
+				AppMain.setMenu(new TitleMenu(graphics, scales));
 			}
 	
-			if (graphics.Screen.Height + y + (credits.Length-1)*font.getTilesize()*2*scale > graphics.Screen.Height/2) {
+			if (graphics.Screen.Height + y + (credits.Length-1)*font.getTilesize()*2*scales.Y > graphics.Screen.Height/2) {
 				y -= 0.5f;
 			}
 	
@@ -49,8 +49,8 @@ namespace DynaBlasterVita
 		public override void Render () {
 			for (int i = 0; i<credits.Length; i++) {
 				font.render(credits[i], 
-						graphics.Screen.Width/2 - (credits[i].ToString().Length/2)*font.getTilesize()*scale, 
-						(int) (graphics.Screen.Height + y + i*font.getTilesize()*2*scale));
+						(int)(graphics.Screen.Width/2 - (credits[i].ToString().Length/2)*font.getTilesize()*scales.X), 
+						(int)(graphics.Screen.Height + y + i*font.getTilesize()*2*scales.Y));
 			}
 	
 		}

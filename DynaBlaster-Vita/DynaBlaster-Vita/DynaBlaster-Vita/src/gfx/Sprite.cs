@@ -139,6 +139,9 @@ namespace DynaBlasterVita
 		
 		public void Render()
 		{
+			Position.X = AppMain.offsetX + Position.X;
+			Position.Y = AppMain.offsetY + Position.Y;
+
 			vertices[0]=Position.X - Width*Center.X;	// x0
 			vertices[1]=Position.Y - Height*Center.Y;	// y0
 			vertices[2]=Position.Z;						// z0
@@ -167,11 +170,12 @@ namespace DynaBlasterVita
 			
 
 			Matrix4 screenMatrix = new Matrix4(
-				 2.0f/graphics.Screen.Rectangle.Width,	0.0f,		0.0f, 0.0f,
-				 0.0f,	 -2.0f/graphics.Screen.Rectangle.Height,	0.0f, 0.0f,
+				 (2.0f/graphics.Screen.Rectangle.Width),	0.0f,		0.0f, 0.0f,
+				 0.0f,	 (-2.0f/graphics.Screen.Rectangle.Height),	0.0f, 0.0f,
 				 0.0f,	 0.0f, 1.0f, 0.0f,
 				-1.0f, 1.0f, 0.0f, 1.0f
 			);
+			
 
 			shaderProgram.SetUniformValue(0, ref screenMatrix);
 

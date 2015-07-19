@@ -9,8 +9,8 @@ namespace DynaBlasterVita
 				
 		public static  Sounds boom = new Sounds("/Application/res/sound/boom.wav");
 		public static  Sounds bomb = new Sounds("/Application/res/sound/bomb.wav");
-		public static  Sounds powerup = new Sounds("/Application/res/sound/bonus.wav");
-		public static  Sounds death = new Sounds("/Application/res/sound/dying.wav");
+		//public static  Sounds powerup = new Sounds("/Application/res/sound/bonus.wav");
+		//public static  Sounds death = new Sounds("/Application/res/sound/dying.wav");
 		
 		private static SoundPlayer soundPlayer;
 

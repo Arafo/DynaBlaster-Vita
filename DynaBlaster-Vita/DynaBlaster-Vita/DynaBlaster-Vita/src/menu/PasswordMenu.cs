@@ -20,29 +20,31 @@ namespace DynaBlasterVita
 		private int index = 0;
 		private Font font1;
 		private int x, y;
+		private Sprite backgroundColor;
 		private Animation bomb;
 		private SpriteLoader sl;
 		private SpriteSheet ss;
 		
-		private Menu menu;
+		private TitleMenu menu;
 		
 		private String[,] passwords;
 	
-		public PasswordMenu(TitleMenu titleMenu, GraphicsContext g, int scale) : base(g, scale) {
+		public PasswordMenu(TitleMenu titleMenu, GraphicsContext g, Vector2 scales) : base(g, scales, new Vector4(73, 102, 192, 255)) {
 			this.menu = titleMenu;
-			this.scale = scale;
-			this.font1 = new Font(new Vector4(255, 255, 255, 255), true, scale, g);
+			//this.scale = scale;
+			this.font1 = new Font(new Vector4(255, 255, 255, 255), true, scales, g);
 			this.password = new String[8];
 			
 			this.sl = new SpriteLoader();
 			this.sl.cargarImagen(cursor);
-			this.sl.setImage(sl.getImage().Resize(new ImageSize(sl.getImage().Size.Width*scale, sl.getImage().Size.Height*scale)));
+			this.sl.setImage(sl.getImage().Resize(new ImageSize((int)(sl.getImage().Size.Width*scales.X), 
+			                                                          (int)(sl.getImage().Size.Height*scales.Y))));
 			
 			this.ss = new SpriteSheet(this.sl.getImage());
 			
-			Sprite[] bomb = {ss.obtenerSprite(0, 0, 20*scale, 23*scale, g), 
-					ss.obtenerSprite(20*scale, 0, 20*scale, 23*scale, g), 
-					ss.obtenerSprite(40*scale, 0, 22*scale, 23*scale, g)};
+			Sprite[] bomb = {ss.obtenerSprite(0, 0, (int)(20*scales.X), (int)(23*scales.Y), g), 
+					ss.obtenerSprite((int)(20*scales.X), 0, (int)(20*scales.X), (int)(23*scales.Y), g), 
+					ss.obtenerSprite((int)(40*scales.X), 0, (int)(22*scales.X), (int)(23*scales.Y), g)};
 			this.bomb = new Animation(bomb, 10);
 				
 			passwords = new String[8, 8];
@@ -55,7 +57,10 @@ namespace DynaBlasterVita
 						passwords[i, j] = line.Substring(line.Length - 8);
 					}			
 				}
+				sr.Dispose();
 			}
+			
+			backgroundColor = Textures.CreateTexture(g.Screen.Width, g.Screen.Height, g, bgColor);
 			
 			this.bomb.start();
 		}
@@ -82,22 +87,18 @@ namespace DynaBlasterVita
 						pass += password[i];
 					}
 
-					found: for(int i=0; i<8; i++) {
+					for(int i=0; i<8; i++) {
 						for(int j=0; j<8; j++) {
 							if(passwords[i, j].Equals(pass)) {
 								i++;
 								j++;
-								//MP3Player.title.stop();
-								//game.startLevel(i, j);
+								menu.sound.close();
+								AppMain.startLevel(i, j);
 								goto found;
 							}
 						}
 					}
-					// TODO crear nivel i j
-					/*for (int i = 0; i<password.length; i++) {
-						System.out.print(password[i]);
-					}*/
-					password = new String[password.Length];
+				found: password = new String[password.Length];
 					index = 0;
 				}
 				else password[index++] = chars[selected]; // Cualquiera de los otros caracteres
@@ -116,41 +117,45 @@ namespace DynaBlasterVita
 		public override void Render() {
 			
 			// Color de fondo
-		 	graphics.SetClearColor(bgColor);
-		    //g.fillRect(0, 0, game.getWidth(), game.getHeight());
+		 	backgroundColor.Position.X = 0;
+			backgroundColor.Position.Y = 0;
+			backgroundColor.Render();
 		    
 		    // Titulo del menu
 		    font1.render(title, 
-		    		graphics.Screen.Width / 2 - (title.Length / 2)*font1.getTilesize()*scale,
-		    		graphics.Screen.Height / 2 - font1.getTilesize()*8*scale);
+		    		(int)(graphics.Screen.Width / 2 - (title.Length / 2)*font1.getTilesize()*scales.X),
+		    		(int)(graphics.Screen.Height / 2 - font1.getTilesize()*8*scales.Y));
 		    
-			this.x = graphics.Screen.Width / 2 - ((19/2)*font1.getTilesize())*scale;
-			this.y = graphics.Screen.Height / 2 - font1.getTilesize()*3*scale;
+			this.x = (int)(graphics.Screen.Width / 2 - ((19/2)*font1.getTilesize())*scales.X);
+			this.y = (int)(graphics.Screen.Height / 2 - font1.getTilesize()*3*scales.Y);
 			
 		    // Cursor de todas los caracteres
-			bomb.getSprite().Position.X = x + selected%10 * font1.getTilesize()*2*scale - 6*scale;
-			bomb.getSprite().Position.Y = y + selected/10 * font1.getTilesize()*2*scale - 10*scale;
+			bomb.getSprite().Position.X = x + selected%10 * font1.getTilesize()*2*scales.X - 6*scales.X;
+			bomb.getSprite().Position.Y = y + selected/10 * font1.getTilesize()*2*scales.Y - 10*scales.Y;
 			bomb.getSprite().Render();
 
 			// Caracteres
 		    for (int i = 0; i < chars.Length; i++) {
 		    	font1.render(chars[i],
-		    			x + i%10 * font1.getTilesize()*2*scale, 
-		    			y + i/10 * font1.getTilesize()*2*scale);
+		    			(int)(x + i%10 * font1.getTilesize()*2*scales.X), 
+		    			(int)(y + i/10 * font1.getTilesize()*2*scales.Y));
 		    }
 		    
-		    this.x = graphics.Screen.Width / 2 - password.Length/2*font1.getTilesize()*scale;
-		    this.y = graphics.Screen.Height - font1.getTilesize()*5*scale;
+		    this.x = (int)(graphics.Screen.Width / 2 - password.Length/2*font1.getTilesize()*scales.X);
+		    this.y = (int)(graphics.Screen.Height - font1.getTilesize()*5*scales.Y);
 		    
 			for (int i = 0; i < password.Length; i++) {
 				if (password[i] != null)
-					font1.render(password[i],  x + i*font1.getTilesize()*scale, y);
+					font1.render(password[i],  (int)(x + i*font1.getTilesize()*scales.X), y);
 				
 				// Guiones
 				font1.render("-", 
-						x + i*font1.getTilesize()*scale, y + font1.getTilesize() * scale);
+				             (int)(x + i*font1.getTilesize()*scales.X),
+				             (int)(y + font1.getTilesize() * scales.Y));
 				// Cursor de la letra seleccionada
-				font1.render("=", x+ index*font1.getTilesize()*scale, y + font1.getTilesize() * scale);
+				font1.render("=", 
+				             (int)(x+ index*font1.getTilesize()*scales.X),
+				             (int)(y + font1.getTilesize() * scales.Y));
 				
 			}
 		}

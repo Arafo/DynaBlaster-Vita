@@ -21,8 +21,7 @@ namespace DynaBlasterVita
 		}
 		
 		public bool intersects(GameObject o) {
-			//return position.intersects(o.position);
-			return false;
+			return position.intersects(o.position);
 		}
 		
 		public bool intersects(Rectangle bounds) {
@@ -40,21 +39,22 @@ namespace DynaBlasterVita
 		protected void touchedBy(GameObject go) {
 		}
 		
-		public Rectangle getBounds() {
+		public virtual Rectangle getBounds() {
 			return position;
 		}
 		
-		public void tick() {
+		public virtual void tick() {
+			animation.tick();
 		}
 		
-		public void render(GraphicsContext g) {
+		public virtual void render(GraphicsContext g) {
 		}
 		
 		public void tick(long ms) {
 			animation.tick();
 		}
 		
-		public void draw(GraphicsContext g) {
+		public virtual void draw(GraphicsContext g) {
 			//g.drawImage(animation.getSprite(), position.x, position.y, null);
 		}
 	}

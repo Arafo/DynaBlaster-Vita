@@ -14,7 +14,7 @@ namespace DynaBlasterVita
 		private Sprite[,] font;
 		private Sprite[,] shad;
 		private SpriteSheet tileset;
-		private int scale;
+		private Vector2 scale;
 		private Vector4 color;
 		private bool shadows;
 		private static String chars = "" +
@@ -22,7 +22,7 @@ namespace DynaBlasterVita
 				"!.<#/>0123456789  =------- ";
 		private GraphicsContext g;
 		
-		public Font(Vector4 color, bool shadows, int scale, GraphicsContext g) {
+		public Font(Vector4 color, bool shadows, Vector2 scale, GraphicsContext g) {
 			this.scale = scale;
 			this.color = color;
 			this.shadows = shadows;
@@ -44,23 +44,23 @@ namespace DynaBlasterVita
 				
 				for (int col = 0; col < numTilesAcross; col++) {
 					subimage = tileset.obtenerSprite(col * TILE_SIZE, 0, TILE_SIZE, TILE_SIZE);
-					aux = ImageToSprite(subimage.Resize(new ImageSize(subimage.Size.Width*scale, subimage.Size.Height*scale)), g);
+					aux = ImageToSprite(subimage.Resize(new ImageSize((int)(subimage.Size.Width*scale.X), (int)(subimage.Size.Height*scale.Y))), g);
 					aux.SetColor(color);
 					font[0, col] = aux;
 					
 					subimage = tileset.obtenerSprite(col * TILE_SIZE, TILE_SIZE, TILE_SIZE, TILE_SIZE);
-					aux = ImageToSprite(subimage.Resize(new ImageSize(subimage.Size.Width*scale, subimage.Size.Height*scale)), g);
+					aux = ImageToSprite(subimage.Resize(new ImageSize((int)(subimage.Size.Width*scale.X), (int)(subimage.Size.Height*scale.Y))), g);
 					aux.SetColor(color);
 					font[1, col] = aux;
 					
 					if (shadows) {
 						shadowImage = tileset.obtenerSprite(col * TILE_SIZE, 0, TILE_SIZE, TILE_SIZE);
-						aux = ImageToSprite(shadowImage.Resize(new ImageSize(shadowImage.Size.Width*scale, shadowImage.Size.Height*scale)), g);
+						aux = ImageToSprite(shadowImage.Resize(new ImageSize((int)(shadowImage.Size.Width*scale.X), (int)(shadowImage.Size.Height*scale.Y))), g);
 						aux.SetColor(new Vector4(0, 0, 0, 255));
 						shad[0, col] = aux;
 						
 						shadowImage = tileset.obtenerSprite(col * TILE_SIZE, TILE_SIZE, TILE_SIZE, TILE_SIZE);
-						aux = ImageToSprite(shadowImage.Resize(new ImageSize(shadowImage.Size.Width*scale, shadowImage.Size.Height*scale)), g);
+						aux = ImageToSprite(shadowImage.Resize(new ImageSize((int)(shadowImage.Size.Width*scale.X), (int)(shadowImage.Size.Height*scale.Y))), g);
 						aux.SetColor(new Vector4(0, 0, 0, 255));
 						shad[1, col] = aux;
 					}
@@ -89,11 +89,11 @@ namespace DynaBlasterVita
 					int r = ix / font.GetLength(1);
 					int c = ix % font.GetLength(1);
 					if (shadows) {
-						shad[r, c].Position.X = x + i * + TILE_SIZE * scale + 2;
+						shad[r, c].Position.X = x + i * + TILE_SIZE * scale.X + 2;
 						shad[r, c].Position.Y = y + 2;
 						shad[r, c].Render();
 					}
-					font[r, c].Position.X = x + i * + TILE_SIZE * scale;
+					font[r, c].Position.X = x + i * + TILE_SIZE * scale.X;
 					font[r, c].Position.Y = y;
 					font[r, c].Render();
 				}
